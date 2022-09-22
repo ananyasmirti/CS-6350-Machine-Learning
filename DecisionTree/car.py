@@ -190,8 +190,8 @@ attribute = {'buying': ['vhigh', 'high', 'med', 'low'],
 
 label = {'label': ['unacc', 'acc', 'good', 'vgood']}
 
-train_data =  pd.read_csv('/content/train.csv', names=columns, dtype=types)
-test_data =  pd.read_csv('/content/test.csv', names=columns, dtype=types)
+train_data =  pd.read_csv('./car/train.csv', names=columns, dtype=types)
+test_data =  pd.read_csv('./car/test.csv', names=columns, dtype=types)
 
 #stores the train labels(expected train labels)
 Y_train = train_data.iloc[:, -1].values.reshape(-1,1)
