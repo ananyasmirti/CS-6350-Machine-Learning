@@ -169,34 +169,53 @@ class DecisionTree():
         count += 1
     return 1 - count/len(ex_labels)
 
-columns = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label']
-types = {'buying': str, 'maint': str, 'doors': str, 'persons': str, 'lug_boot': str, 'safety': str, 'label': str}
+columns = ['age', 'job', 'marital', 'education', 'default', 'balance', 'housing', 'loan', 'contact', 'day', 'month', 'duration', 'campaign', 'pdays', 'previous', 'poutcome', 'y']
 
-attribute = {'buying': ['vhigh', 'high', 'med', 'low'], 
-            'maint':  ['vhigh', 'high', 'med', 'low'], 
-            'doors':  ['2', '3', '4', '5more'], 
-            'persons': ['2', '4', 'more'], 
-            'lug_boot': ['small', 'med', 'big'],  
-            'safety':  ['low', 'med', 'high']  }
-
-label = {'label': ['unacc', 'acc', 'good', 'vgood']}
-
-train_data =  pd.read_csv('./car/train.csv', names=columns, dtype=types)
-test_data =  pd.read_csv('./car/test.csv', names=columns, dtype=types)
+train_data =  pd.read_csv('./bank/train.csv', names=columns)
+test_data =  pd.read_csv('./bank/test.csv', names=columns)
 
 #stores the train labels(expected train labels)
 Y_train = train_data.iloc[:, -1].values.reshape(-1,1)
 #stores the test labels(expected test labels)
 Y_test = test_data.iloc[:, -1].values.reshape(-1,1)
 
+attri_num = ['age', 'balance', 'day', 'duration', 'campaign', 'pdays', 'previous']
+
+for i in attri_num:
+    m = train_data[i].median()
+    train_data[i] = train_data[i].apply(lambda x: 1 if x > m else 0)
+
+for i in attri_num:
+    m = train_data[i].median()
+    test_data[i] = train_data[i].apply(lambda x: 1 if x > m else 0)
+
+#attributes after converting them into binary
+attribute = {'age': [0, 1], 
+        'job': ['admin.', 'unknown', 'unemployed', 'management', 'housemaid', 'entrepreneur', 'student', 'blue-collar', 'self-employed', 'retired', 'technician', 'services'], 
+        'marital': ['married','divorced','single'], 
+        'education': ['unknown', 'secondary', 'primary', 'tertiary'],
+        'default': ['yes', 'no'],
+        'balance': [0, 1], 
+        'housing': ['yes', 'no'],
+        'loan': ['yes', 'no'],
+        'contact': ['unknown', 'telephone', 'cellular'],
+        'day': [0, 1],  
+        'month': ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+        'duration': [0, 1],  
+        'campaign': [0, 1], 
+        'pdays': [0, 1], 
+        'previous': [0, 1],  
+        'poutcome': ['unknown', 'other', 'failure', 'success']}
+label = {'y': ['yes', 'no']}
+
 er = ["gini", "entropy","me"]
 test_run = [0, 0,0]
 train_run = [0, 0,0]
-print("CAR DATA")
+print("Bank Data with unknowns included")
 print("Test Errors                              |Train Errors")
 print("{:<8} {:<10} {:<10} {:<10}".format("Depth", "Gini", "Entropy","Majority") + "|" +
       "{:<8} {:<10} {:<10} {:<10}".format("Depth", "Gini", "Entropy","Majority"))
-for i in range(1, 7):
+for i in range(1, 17):
   test_errs = []
   train_errs = []
   for u,e in enumerate(er):
@@ -211,8 +230,73 @@ for i in range(1, 7):
     test_run[u] += classifier.test_error(Y_pred,Y_test)
   print("{:<8} {:<10.3f} {:<10.3f} {:<10.3}".format(i, test_errs[0], test_errs[1],test_errs[2] )   +  "|" +"{:<8} {:<10.3f} {:<10.3f} {:<10.3}".format(i, train_errs[0], train_errs[1],train_errs[2] ))
 
-train_run = [a / 6 for a in train_run]
-test_run = [a/ 6 for a in test_run]
+train_run = [a/ 16 for a in train_run]
+test_run = [a / 16 for a in test_run]
+print("Avg of train error:")
+print("Gini Index: {:.3f}, Entropy: {:.3f},Majority Error: {:.3f}".format(train_run[0], train_run[1],train_run[2] ))
+print("Avg of test error:")
+print("Gini Index: {:.3f}, Entropy: {:.3f},Majority Error: {:.3f}\n".format(test_run[0], test_run[1], test_run[2]))
+
+attri_u=['job', 'education', 'contact', 'poutcome']
+for i in attri_u:
+    new = train_data[i].value_counts().index.tolist()
+    if new[0] != 'unknown':
+        replace = new[0]
+    else:
+        replace = new[1]
+    train_data[i] = train_data[i].apply(lambda k: replace if k == 'unknown' else k)
+
+for i in attri_u:
+    new = test_data[i].value_counts().index.tolist()
+    if new[0] != 'unknown':
+        replace = new[0]
+    else:
+        replace = new[1]
+    test_data[i] = test_data[i].apply(lambda k: replace if k == 'unknown' else k)
+
+#attributes after converting them into binary and removing the unknowns
+attribute = {'age': [0, 1],  
+        'job': ['admin.', 'unemployed', 'management', 'housemaid', 'entrepreneur', 'student', 'blue-collar', 'self-employed', 'retired', 'technician', 'services'], 
+        'marital': ['married','divorced','single'], 
+        'education': [ 'secondary', 'primary', 'tertiary'],
+        'default': ['yes', 'no'],
+        'balance': [0, 1],  
+        'housing': ['yes', 'no'],
+        'loan': ['yes', 'no'],
+        'contact': [ 'telephone', 'cellular'],
+        'day': [0, 1], 
+        'month': ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+        'duration': [0, 1], 
+        'campaign': [0, 1], 
+        'pdays': [0, 1],
+        'previous': [0, 1], 
+        'poutcome': [ 'other', 'failure', 'success']}
+label = {'y': ['yes', 'no']}
+
+er = ["gini", "entropy","me"]
+test_run = [0, 0,0]
+train_run = [0, 0,0]
+print("Bank Data with NO unknowns included")
+print("Test Errors                              |Train Errors")
+print("{:<8} {:<10} {:<10} {:<10}".format("Depth", "Gini", "Entropy","Majority") + "|" +
+      "{:<8} {:<10} {:<10} {:<10}".format("Depth", "Gini", "Entropy","Majority"))
+for i in range(1, 17):
+  test_errs = []
+  train_errs = []
+  for u,e in enumerate(er):
+    classifier = DecisionTree(e,i)
+    decision_tree = classifier.make_tree(train_data, attribute, label)
+    Y_pred = classifier.make_pred(decision_tree, train_data)
+    train_errs.append(classifier.test_error(Y_pred, Y_train))
+    train_run[u] += classifier.test_error(Y_pred, Y_train)
+
+    Y_pred = classifier.make_pred(decision_tree, test_data)
+    test_errs.append(classifier.test_error(Y_pred,Y_test))
+    test_run[u] += classifier.test_error(Y_pred,Y_test)
+  print("{:<8} {:<10.3f} {:<10.3f} {:<10.3}".format(i, test_errs[0], test_errs[1],test_errs[2] )   +  "|" +"{:<8} {:<10.3f} {:<10.3f} {:<10.3}".format(i, train_errs[0], train_errs[1],train_errs[2] ))
+
+train_run = [a / 16 for a in train_run]
+test_run = [a / 16 for a in test_run]
 print("Avg of train error:")
 print("Gini Index: {:.3f}, Entropy: {:.3f},Majority Error: {:.3f}".format(train_run[0], train_run[1],train_run[2] ))
 print("Avg of test error:")
