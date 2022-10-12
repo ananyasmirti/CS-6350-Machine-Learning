@@ -186,8 +186,8 @@ for i in attri_num:
     train_data[i] = train_data[i].apply(lambda x: 1 if x > m else 0)
 
 for i in attri_num:
-    m = test_data[i].median()
-    test_data[i] = test_data[i].apply(lambda x: 1 if x > m else 0)
+    m = train_data[i].median()
+    test_data[i] = train_data[i].apply(lambda x: 1 if x > m else 0)
 
 #attributes after converting them into binary
 attribute = {'age': [0, 1], 
