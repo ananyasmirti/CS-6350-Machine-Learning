@@ -22,14 +22,12 @@ class Node():
 '''
 Here we implement the ID3 alogorithm class DecisionTree which takes the error funtion in er by which it will compute einformation gain, 
 depth which stores the maximum depth the tree can grow upto
-For Random forest we will take in consideration the subset also 
 ''' 
 class DecisionTree():
-  def __init__(self, er, depth=0,small=2):
+  def __init__(self, er, depth=0):
     
     self.depth = depth
     self.er=er
-    self.small = small
 
 #make_tree function grows the tree by first storing the root node and then spliting on each feature by calling the split_at function 
 #and  then storing the them at the last returing the daughter node of root.
@@ -85,20 +83,10 @@ class DecisionTree():
         if s > 0:
           node_d.label= dom_label
         return nlist
-
-
-    kt = list(attribute.keys())
-
-    #making the random subset    
-    if len(kt) > self.small:
-        small_attri = np.random.choice(kt, self.small, replace=False)
-    else:
-        small_attri = kt
   
 #calculating information gain
-    for k in small_attri:
+    for k,v in attribute.items():
         gain = 0
-        v = attribute[k]
         for i in v:
             small = data[data[k] == i]
             p = len(small.index) / s
@@ -182,18 +170,19 @@ class DecisionTree():
     return 1 - count/len(ex_labels)
 
 import matplotlib.pyplot as plt
+import math
 
-columns = ['age', 'job', 'marital', 'education', 'default', 'balance', 'housing', 'loan', 'contact', 'day', 'month', 'duration', 'campaign', 'pdays', 'previous', 'poutcome', 'y']
+columns = ['X1','X2','X3','X4','X5','X6','X7','X8','X9','X10','X11','X12','X13','X14','X15','X16','X17','X18','X19','X20','X21','X22','X23','y']
 
-train_data =  pd.read_csv('./bank/train.csv', names=columns)
-test_data =  pd.read_csv('./bank/test.csv', names=columns)
+train_data =  pd.read_csv('./credit/train.csv', names=columns)
+test_data =  pd.read_csv('./credit/test.csv', names=columns)
 
 #stores the train labels(expected train labels)
 Y_train = train_data.iloc[:, -1].values.reshape(-1,1)
 #stores the test labels(expected test labels)
 Y_test = test_data.iloc[:, -1].values.reshape(-1,1)
 
-attri_num = ['age', 'balance', 'day', 'duration', 'campaign', 'pdays', 'previous']
+attri_num = ['X1', 'X5', 'X12', 'X13', 'X14', 'X15', 'X16', 'X17', 'X18', 'X19', 'X20', 'X21', 'X22', 'X23']
 
 for i in attri_num:
     m = train_data[i].median()
@@ -204,23 +193,30 @@ for i in attri_num:
     test_data[i] = test_data[i].apply(lambda x: 1 if x > m else 0)
 
 #attributes after converting them into binary
-attribute = {'age': [0, 1], 
-        'job': ['admin.', 'unknown', 'unemployed', 'management', 'housemaid', 'entrepreneur', 'student', 'blue-collar', 'self-employed', 'retired', 'technician', 'services'], 
-        'marital': ['married','divorced','single'], 
-        'education': ['unknown', 'secondary', 'primary', 'tertiary'],
-        'default': ['yes', 'no'],
-        'balance': [0, 1], 
-        'housing': ['yes', 'no'],
-        'loan': ['yes', 'no'],
-        'contact': ['unknown', 'telephone', 'cellular'],
-        'day': [0, 1],  
-        'month': ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
-        'duration': [0, 1],  
-        'campaign': [0, 1], 
-        'pdays': [0, 1], 
-        'previous': [0, 1],  
-        'poutcome': ['unknown', 'other', 'failure', 'success']}
-label = {'y': ['yes', 'no']}
+attribute = {'X1': [0, 1],  
+        'X2': [1, 2], 
+        'X3': [0,1,2,3,4,5,6], 
+        'X4': [0,1,2,3],
+        'X5': [0, 1],
+        'X6': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X7': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X8': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X9': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X10': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X11': [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        'X12': [0, 1],
+        'X13': [0, 1],
+        'X14': [0, 1],
+        'X15': [0, 1],
+        'X16': [0, 1],
+        'X17': [0, 1],
+        'X18': [0, 1],
+        'X19': [0, 1],
+        'X20': [0, 1],
+        'X21': [0, 1],
+        'X22': [0, 1],
+        'X23': [0, 1],}
+label = {'y': [0, 1]}
 
 T = 500
 
@@ -234,35 +230,38 @@ train_pred = np.array([0 for x in range(train_size)])
 test_pred = np.array([0 for x in range(test_size)])
 
 for i in range(T):
-    sampled = train_data.sample(frac=0.5, replace=True, random_state=i)
+   
+    sampled = train_data.sample(frac=0.05, replace=True, random_state=i)
     
-    classifier = DecisionTree(er="entropy", depth=17,small=2)
+    classifier = DecisionTree(er="entropy", depth=17)
+    
     decision_tree = classifier.make_tree(sampled, attribute, label)
-    
+
     pred = classifier.make_pred(decision_tree, train_data) 
     pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
+    pred[pred == 1] = 1
+    pred[pred == 0] = -1
+    
     train_pred = train_pred + pred
-    pred = pred.astype(str)
-    pred[train_pred > 0] = 'yes'
-    pred[train_pred <=0] = 'no'
+    
+    pred[train_pred > 0] = 1
+    pred[train_pred <=0] = 0
     train_data['pred'] = pd.Series(pred)
 
     a = train_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / train_size
     error = 1 - a
     e_train[i] = error
     
+    
     pred = classifier.make_pred(decision_tree, test_data) 
     pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
+    pred[pred == 1] = 1
+    pred[pred == 0] = -1
+    
     test_pred = test_pred + pred
-    pred = pred.astype(str)
-    pred[test_pred > 0] = 'yes'
-    pred[test_pred <=0] = 'no'
+    
+    pred[test_pred > 0] = 1
+    pred[test_pred <=0] = 0
     test_data['pred'] = pd.Series(pred)
     a = test_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / test_size
     error = 1 - a
@@ -270,124 +269,11 @@ for i in range(T):
     print('i: ', i, 'error_train: ', e_train[i], 'error_test: ', e_test[i])
 
 
-f = plt.figure()
-f.suptitle('Random Forest with Feature Subset = 2')
+fig = plt.figure()
+fig.suptitle('Bagged Decision Tree')
 plt.xlabel('Iteration', fontsize=12)
 plt.ylabel('Error', fontsize=12)
 plt.plot(e_train, 'b')
 plt.plot(e_test, 'r')  
 plt.legend(['train', 'test'])
-f.savefig('RandomForest2.png')
-
-T = 500
-
-train_size = len(train_data.index)
-test_size = len(test_data.index)
-
-e_train = [0 for x in range(T)]
-e_test = [0 for x in range(T)]
-
-train_pred = np.array([0 for x in range(train_size)])
-test_pred = np.array([0 for x in range(test_size)])
-
-for i in range(T):
-    sampled = train_data.sample(frac=0.5, replace=True, random_state=i)
-    classifier = DecisionTree(er="entropy", depth=17,small=4)
-    decision_tree = classifier.make_tree(sampled, attribute, label)
-
-    pred = classifier.make_pred(decision_tree, train_data) 
-    pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
-    train_pred = train_pred + pred
-    pred = pred.astype(str)
-    pred[train_pred > 0] = 'yes'
-    pred[train_pred <=0] = 'no'
-    train_data['pred'] = pd.Series(pred)
-
-    a = train_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / train_size
-    error = 1 - a
-    e_train[i] = error
-    
-    pred = classifier.make_pred(decision_tree, test_data) 
-    pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
-    test_pred = test_pred + pred
-    pred = pred.astype(str)
-    pred[test_pred > 0] = 'yes'
-    pred[test_pred <=0] = 'no'
-    test_data['pred'] = pd.Series(pred)
-    a = test_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / test_size
-    error = 1 - a
-    e_test[i] = error
-    print('i: ', i, 'error_train: ', e_train[i], 'error_test: ', e_test[i])
-
-
-f = plt.figure()
-f.suptitle('Random Forest with Feature Subset = 4')
-plt.xlabel('Iteration', fontsize=12)
-plt.ylabel('Error', fontsize=12)
-plt.plot(e_train, 'b')
-plt.plot(e_test, 'r')  
-plt.legend(['train', 'test'])
-f.savefig('RandomForest4.png')
-
-T = 500
-
-train_size = len(train_data.index)
-test_size = len(test_data.index)
-
-e_train = [0 for x in range(T)]
-e_test = [0 for x in range(T)]
-
-train_pred = np.array([0 for x in range(train_size)])
-test_pred = np.array([0 for x in range(test_size)])
-
-for i in range(T):
-    sampled = train_data.sample(frac=0.5, replace=True, random_state=i)
-    
-    classifier = DecisionTree(er="entropy", depth=17,small=6)
-    
-    decision_tree = classifier.make_tree(sampled, attribute, label)
-    pred = classifier.make_pred(decision_tree, train_data) 
-    pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
-    train_pred = train_pred + pred
-    pred = pred.astype(str)
-    pred[train_pred > 0] = 'yes'
-    pred[train_pred <=0] = 'no'
-    train_data['pred'] = pd.Series(pred)
-
-    a = train_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / train_size
-    error = 1 - a
-    e_train[i] = error
-    
-    pred = classifier.make_pred(decision_tree, test_data) 
-    pred = np.array(pred.tolist())
-    pred[pred == 'yes'] = 1
-    pred[pred == 'no'] = -1
-    pred = pred.astype(int)
-    test_pred = test_pred + pred
-    pred = pred.astype(str)
-    pred[test_pred > 0] = 'yes'
-    pred[test_pred <=0] = 'no'
-    test_data['pred'] = pd.Series(pred)
-    a = test_data.apply(lambda row: 1 if row['y'] == row['pred'] else 0, axis=1).sum() / test_size
-    error = 1 - a
-    e_test[i] = error
-    print('i: ', i, 'error_train: ', e_train[i], 'error_test: ', e_test[i])
-
-
-f = plt.figure()
-f.suptitle('Random Forest with Feature Subset = 6')
-plt.xlabel('Iteration', fontsize=12)
-plt.ylabel('Error', fontsize=12)
-plt.plot(e_train, 'b')
-plt.plot(e_test, 'r')  
-plt.legend(['train', 'test'])
-f.savefig('RandomForest6.png')
+fig.savefig('bdtC.png')
