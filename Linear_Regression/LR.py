@@ -96,8 +96,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-train_s = extract_data_from_csv('/content/train.csv')
-test_s = extract_data_from_csv('/content/test.csv')
+train_s = extract_data_from_csv('./concrete/train.csv')
+test_s = extract_data_from_csv('./concrete/test.csv')
 
 train= []
 for r in train_s:
