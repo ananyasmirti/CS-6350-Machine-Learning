@@ -127,7 +127,7 @@ plt.plot(cost_fv)
 plt.ylabel('Cost Function Value')
 plt.xlabel('Step')
 plt.title('BGD Cost Function')
-plt.show()
+plt.savefig('BGD.png')
 
 
 
@@ -144,7 +144,7 @@ plt.plot(cost_fv)
 plt.ylabel('Value of Cost Function ')
 plt.xlabel('Step')
 plt.title('SGD Cost Function')
-plt.show()
+plt.savefig('SGD.png')
 
 X = np.transpose(np.array([row[:-1] for row in train]))
 Y = np.array([row[-1] for row in train])
