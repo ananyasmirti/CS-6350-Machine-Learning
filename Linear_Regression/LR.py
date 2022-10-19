@@ -64,7 +64,7 @@ def stochastic( dataset):
 
         cost_fv.append(cost_function(w, dataset))
         lr *= .999
-    return w,r,cost_fv
+    return w,lr,cost_fv
 
 
 def cost_function(w, dataset):
@@ -132,7 +132,7 @@ plt.savefig('BGD.png')
 
 
 w1,r1,cost_fv1 = stochastic(train)
-test_e1 = cost_function(w, test)
+test_e1 = cost_function(w1, test)
 print('SGD')
 print('Cost on testing data- ', test_e1)
 print('Start LR value 0.1')
