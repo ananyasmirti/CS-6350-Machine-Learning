@@ -131,16 +131,16 @@ plt.savefig('BGD.png')
 
 
 
-w,r,cost_fv = stochastic(train)
-test_e = cost_function(w, test)
+w1,r1,cost_fv1 = stochastic(train)
+test_e1 = cost_function(w, test)
 print('SGD')
-print('Cost on testing data- ', test_e)
+print('Cost on testing data- ', test_e1)
 print('Start LR value 0.1')
 print('LR value per step 0.999')
-print(f'Final weights: {w}')
-print(f'Final Lr: {r}')
+print(f'Final weights: {w1}')
+print(f'Final Lr: {r1}')
 
-plt.plot(cost_fv)
+plt.plot(cost_fv1)
 plt.ylabel('Value of Cost Function ')
 plt.xlabel('Step')
 plt.title('SGD Cost Function')
