@@ -25,5 +25,6 @@ python3 rf_credit.py
 ## Linear Regression
 To run the bank files
 ```
-python3 LR.py
+python3 BGD.py
+python3 SGD.py
 ```

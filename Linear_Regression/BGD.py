@@ -133,3 +133,10 @@ plt.xlabel('Step')
 plt.title('BGD Cost Function')
 plt.legend()
 plt.savefig('BGD.png')
+
+X = np.transpose(np.array([row[:-1] for row in train]))
+Y = np.array([row[-1] for row in train])
+
+w_a= np.dot(np.linalg.inv(np.dot(X, np.transpose(X))), np.dot(X, Y))
+
+print(f'The analytical solution to the optimal weight vector is: \n{w_a}')
