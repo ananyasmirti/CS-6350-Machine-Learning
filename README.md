@@ -28,3 +28,8 @@ To run the bank files
 python3 BGD.py
 python3 SGD.py
 ```
+## Perceptron
+To run the bank files
+```
+python3 perceptron.py
+```
