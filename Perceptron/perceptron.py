@@ -49,7 +49,7 @@ def voted(train, test, T,lr):
     
     for e in range(1, T + 1):
         
-        shuffle= train.sample(frac=1).reset_index(drop=True)
+        shuffle= train.reset_index(drop=True)
         shuffle['1'] = 1
         col = shuffle.pop('1')
         shuffle.insert(0, '1', col)
@@ -86,7 +86,7 @@ def averaged(train, test, T,lr):
     wei = np.zeros(len(train.columns))
     wef = np.zeros(len(train.columns))
     for e in range(1, T + 1):
-        shuffle = train.sample(frac=1).reset_index(drop=True)
+        shuffle = train.reset_index(drop=True)
         shuffle['1'] = 1
         col = shuffle.pop('1')
         shuffle.insert(0, '1', col)
