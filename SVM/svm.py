@@ -147,7 +147,7 @@ for C in C_list:
     print('Train error: ', err_train)
     print('Test error: ', err_test)
     wei = np.reshape(wei, (1,-1))
-    # print('w1: ', w)
+    # print('weight:', wei)
 
     wei = primal_SVM1(0.1,C,train_x, train_y)
     wei = np.reshape(wei, (5,1))
@@ -167,9 +167,8 @@ for C in C_list:
     print('Test error: ', err_test)
     wei = np.reshape(wei, (1,-1))
 
-    # dual form
     wei = dual_SVM(C,train_x[:,[x for x in range(col - 1)]] ,train_y)
-    # print('w2: ', w)
+    # print('weight: ', wei)
 
     wei = np.reshape(wei, (5,1))
 
@@ -187,18 +186,18 @@ for C in C_list:
     print('Train error: ', err_train)
     print('Test error: ', err_test)
 
-    # gaussian kernel
+
     c = 0
     for gamma in gamma_list:
         print('Gamma: ', gamma)
         al = gauss_SVM(C,gamma,train_x[:,[x for x in range(col - 1)]] ,train_y)
         id = np.where(al > 0)[0]
         print('Support Vectors: ', len(id))
-        # train 
+    
         y = gauss_predict(gamma,al, train_x[:,[x for x in range(col - 1)]], train_y, train_x[:,[x for x in range(col - 1)]])
         err_train = np.sum(np.abs(y - np.reshape(train_y,(-1,1)))) / 2 / train_y.shape[0]
 
-        # test
+     
         y = gauss_predict(gamma,al,train_x[:,[x for x in range(col - 1)]], train_y, test_x[:,[x for x in range(col - 1)]])
         err_test = np.sum(np.abs(y - np.reshape(test_y,(-1,1)))) / 2 / test_y.shape[0]
         print('Gaussian SVM non-Linear ')
