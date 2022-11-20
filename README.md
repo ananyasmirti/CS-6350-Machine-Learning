@@ -33,3 +33,8 @@ To run the bank files
 ```
 python3 perceptron.py
 ```
+## SVM
+To run the bank files
+```
+python3 svm.py
+```
