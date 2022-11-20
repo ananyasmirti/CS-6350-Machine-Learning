@@ -52,14 +52,14 @@ def object(al, x, y):
     le = le + 0.5 * np.sum(np.matmul(ayx, np.transpose(ayx)))
     return le
 
-def convert( al,y):
+def constraint( al,y):
     t1 = np.matmul(np.reshape(al,(1, -1)), np.reshape(y,(-1,1)))
     return t1[0]
 
 def dual_SVM(C,x, y):
     num_s = x.shape[0]
     bands = [(0, C)] * num_s
-    cons = ({'type': 'eq', 'fun': lambda al: convert(al, y)})
+    cons = ({'type': 'eq', 'fun': lambda al: constraint(al, y)})
     al0 = np.zeros(num_s)
     r = opt.minimize(lambda al: object(al, x, y), al0,  method='SLSQP', bounds=bands,constraints=cons, options={'disp': False})
     wei = np.sum(np.multiply(np.multiply(np.reshape(r.x,(-1,1)), np.reshape(y, (-1,1))), x), axis=0)
@@ -89,7 +89,7 @@ def object_guass( al, k, y):
 def gauss_SVM(C,gamma, x, y):
     num_s = x.shape[0]
     bands = [(0, C)] * num_s
-    cons = ({'type': 'eq', 'fun': lambda al: convert(al, y)})
+    cons = ({'type': 'eq', 'fun': lambda al: constraint(al, y)})
     al0 = np.zeros(num_s)
     d = kernel_gauss(x, x, gamma)
     r = opt.minimize(lambda al: object_guass(al, d, y), al0,  method='SLSQP', bounds=bands,constraints=cons, options={'disp': False})
