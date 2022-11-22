@@ -38,3 +38,7 @@ To run the bank files
 ```
 python3 svm.py
 ```
+To run Kernel Perceptron
+```
+python3 kPer.py
+```
