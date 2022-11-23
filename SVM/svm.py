@@ -132,6 +132,7 @@ for C in C_list:
    
     wei = primal_SVM(0.1,0.1,C,train_x, train_y)
     wei = np.reshape(wei, (5,1))
+    print('1 weight:', wei)
 
     pred = np.matmul(train_x, wei)
     pred[pred > 0] = 1
@@ -147,10 +148,10 @@ for C in C_list:
     print('Train error: ', err_train)
     print('Test error: ', err_test)
     wei = np.reshape(wei, (1,-1))
-    # print('weight:', wei)
 
     wei = primal_SVM1(0.1,C,train_x, train_y)
     wei = np.reshape(wei, (5,1))
+    print('2 weight:', wei)
 
     pred = np.matmul(train_x, wei)
     pred[pred > 0] = 1
