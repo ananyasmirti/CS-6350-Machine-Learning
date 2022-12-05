@@ -42,3 +42,8 @@ To run Kernel Perceptron
 ```
 python3 kPer.py
 ```
+## Neural Network
+To run the bank files
+```
+python3 nn.py
+```
