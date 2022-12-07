@@ -116,7 +116,7 @@ test_x = test_data.iloc[:, 0:4].to_numpy()
 test_y = pred_cal(test_data.iloc[:, 4].to_numpy())
 
 
-# 2a
+
 s_2ap = np.array([[-2.437]])
 ca_2ap = (np.array([[-6, 6]]), np.array([[0.00247, 0.9975]]), np.array([[-4, 4]]), np.array([[0.01803, 0.9820]]))
 
@@ -148,8 +148,7 @@ print('dW1 = {0},\ndb1 = {1}, \ndW2 = {2},\ndb2 = {3},\ndW3 = {4},\ndb3 = {5}\n\
 
 
 
-# 2b
-# Weight initialization with randomly sampled standard gaussain 
+
 r0 = 0.1
 d = 0.1
 T = 100
@@ -177,8 +176,7 @@ for wid in wid_l:
     print('Train error: ',train_err)
     print('Test error: ',test_err)
 
-# 2c
-# Weight initialization with zero
+
 r0 = 0.1
 d = 0.1
 T = 100
