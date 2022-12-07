@@ -76,7 +76,7 @@ for v in v_l:
     pred[pred <= 0] = -1
 
     e_test = np.sum(np.abs(pred - np.reshape(test_y,(-1,1)))) / 2 / test_y.shape[0]
-    print('Train_error: ', e_train)
+    print('Train error: ', e_train)
     print('Test error: ',e_test)
 
 
@@ -93,5 +93,5 @@ pred[pred > 0] = 1
 pred[pred <= 0] = -1
 
 e_test = np.sum(np.abs(pred - np.reshape(test_y,(-1,1)))) / 2 / test_y.shape[0]
-print('Train_error: ', e_train)
+print('Train error: ', e_train)
 print('Test error: ',e_test)
