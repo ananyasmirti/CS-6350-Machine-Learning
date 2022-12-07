@@ -42,7 +42,6 @@ def ML( x, y,r0,d):
 train = pd.read_csv('./bank-note/train.csv', header=None)
 r = train.values
 n_col = r.shape[1]
-n_row = r.shape[0]
 train_x = np.copy(r)
 train_x[:,n_col - 1] = 1
 train_y = r[:, n_col - 1]
@@ -51,7 +50,6 @@ train_y = 2 * train_y - 1
 test = pd.read_csv('./bank-note/test.csv', header=None)
 r = test.values
 n_col = r.shape[1]
-num_row = r.shape[0]
 test_x = np.copy(r)
 test_x[:,n_col - 1] = 1
 test_y = r[:, n_col - 1]
