@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
     
-def MAP(x, y,v,r,d):
+def MAP(x, y,v,r0,d):
     n_s = x.shape[0]
     di = x.shape[1]
     wei = np.zeros([1, di])
@@ -16,13 +16,13 @@ def MAP(x, y,v,r,d):
             te = y[i] * np.sum(np.multiply(wei, x_i))
             g = - (n_s * y[i] * x_i )/ (1 + np.exp(te)) + wei / v
             #print(g)
-            r = r / (1 + r / d * t)
-            #r=r/2
+            r = r0 / (1 + r0 / d * t)
+            #r0=r0/2
             wei = wei - (r * g)
             #print(wei)
     return wei.reshape([-1,1])
 
-def ML( x, y,r,d):
+def ML( x, y,r0,d):
     n_s = x.shape[0]
     di = x.shape[1]
     wei = np.zeros([1, di])
@@ -34,7 +34,7 @@ def ML( x, y,r,d):
         for i in range(n_s):
             te = y[i] * np.sum(np.multiply(wei, x[i,:]))
             g = - n_s * y[i] * x[i,:] / (1 + np.exp(te))
-            r = r / (1 + r / d * t)
+            r = r0 / (1 + r0 / d * t)
             wei = wei - r * g
     return wei.reshape([-1,1])
 
