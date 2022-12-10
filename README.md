@@ -47,3 +47,8 @@ To run the bank files
 ```
 python3 nn.py
 ```
+## Logistic Regression
+To run the bank files
+```
+python3 log.py
+```
