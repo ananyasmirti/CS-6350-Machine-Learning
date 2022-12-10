@@ -20,11 +20,6 @@ class NN():
         self.W3 = np.random.normal(size=(self.wid,1)) if wi else np.zeros((self.wid,1)) 
         self.b3 = np.random.normal(size=(1)) if wi else np.zeros((1)) 
 
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-    
-    def Error(self, scores, y):
-        return np.mean(0.5 * ((scores - y)**2))
     
     def forward(self, X):
         S1 = np.dot(X, self.W1) + self.b1 
@@ -95,6 +90,12 @@ class NN():
     def fit(self, X):
         score, _ = self.forward(X)
         return np.sign(score.flatten())
+    
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
+    def Error(self, scores, y):
+        return np.mean(0.5 * ((scores - y)**2))
    
 
 
@@ -137,16 +138,33 @@ s_2a, ca_2a = n_2a.forward(X_2a)
 back = n_2a.backwards(X_2a, y_2a, s_2a, ca_2a)
 
 print('Forward pass by hand:')
-print('score = {0},\nS1 = {1}, \nZ1 = {2},\nS2 = {3},\nZ2 = {4}\n\n'.format(s_2ap, *ca_2ap))
+print('Score',s_2ap)
+print('S1:',ca_2ap[0])
+print('Z1:',ca_2ap[1])
+print('S2:',ca_2ap[2])
+print('Z2:',ca_2ap[3])
 print('Forward pass results:')
-print('score = {0},\nS1 = {1}, \nZ1 = {2},\nS2 = {3},\nZ2 = {4}\n\n'.format(s_2a, *ca_2a))
+print('Score',s_2a)
+print('S1:',ca_2a[0])
+print('Z1:',ca_2a[1])
+print('S2:',ca_2a[2])
+print('Z2:',ca_2a[3])
 
 print('Backward pass by hand:')
-print('dW1 = {0},\ndb1 = {1}, \ndW2 = {2},\ndb2 = {3},\ndW3 = {4},\ndb3 = {5}\n\n'.format(*back_p))
+print('dW1:',back_p[0])
+print('db1:',back_p[1])
+print('dW2:',back_p[2])
+print('db2:',back_p[3])
+print('dW3:',back_p[4])
+print('db3:',back_p[5])
+
 print('Backward pass results:')
-print('dW1 = {0},\ndb1 = {1}, \ndW2 = {2},\ndb2 = {3},\ndW3 = {4},\ndb3 = {5}\n\n'.format(*back))
-
-
+print('dW1:',back[0])
+print('db1:',back[1])
+print('dW2:',back[2])
+print('db2:',back[3])
+print('dW3:',back[4])
+print('db3:',back[5])
 
 
 r0 = 0.1
